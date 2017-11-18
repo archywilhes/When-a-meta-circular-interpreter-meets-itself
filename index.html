@@ -1,0 +1,427 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<script src="http://underscorejs.org/underscore-min.js"></script>
+
+		<title>Slide</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
+		<style>
+		.blockage{
+			background-color: #fff;
+			padding: 4px !important;
+			margin:2px !important;
+			display: inline-block;
+			font-size: 0.3em !important;
+			color:#000;
+			font-weight: 900
+		}
+		.slideshow{
+
+			height:900px !important; width:340px !important;
+			position:relative !important;
+			margin:0 auto !important;
+			margin-top: -50px !important;
+		}
+		.slideshow img{
+			position: absolute;
+			margin:0 auto;
+			top:0;
+			width: 340px;
+			left:0
+		}
+		</style>
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h3>When a Meta-circular intrepter meets itself</h3>
+					<div style="text-align:right"><small>Archy Wilhes</small></div>
+					<img src="images/not_to_be_reproduced.jpg" width="320px">
+				</section>
+				<section>
+					<p>Great Thanks to Professor Olivier Danvy from Yale-NUS
+					<small>for introducing me to the world of programming language theory.</small>
+				</p>
+				<p>A Huge Thank You to Sir Todd Lewis from Brick Abode
+				<small>for giving me all these great undergrad and grad texts in CS.</small>
+			</p>
+				</section>
+				<section>
+					What is a programming?
+					<br /> <br />
+					<p class="fragment" style="font-size:0.8em">
+						Why do some people find programing langauges intimidating?
+					<img src="images/programming_languages_and_me.jpg" width="480px">
+					</p>
+				</section>
+				<section>
+						Comparing to human languages, <br /> programming languages are more like wizardry!
+							<img src="images/pottery.png" width="480px">
+				</section>
+				<section>
+					<p>Human languages and programming languages are intrinsically very different. <br />
+				</p>
+				<div style="position:relative">
+					<div class="fragment" style="overflow:hidden; position:absolute;top:0">
+						<div style="width:50%; text-align:center; float:left">
+						<img src="images/start_kernel.png" style="width:50%; ">
+						<small>an extract of init/main.c from Linux 4.13.12</small>
+					</div>
+					<div style="width:50%; text-align:center; float:left">
+						<img src="images/self_reliance.png" style="width:50%">
+						<small>an extract of Self-Reliance by Ralph Waldo Emerson, 1841</small>
+					</div>
+				</div>
+				<div class="fragment" style="overflow:hidden; position:absolute;top:0">
+					<div style="width:50%; text-align:center; float:left">
+					<img src="images/start_kernel_circled.png" style="width:50%; ">
+					<small>an extract of init/main.c from Linux 4.13.12</small>
+				</div>
+				<div style="width:50%; text-align:center; float:left">
+					<img src="images/self_reliance_circled.png" style="width:50%">
+					<small>an extract of Self-Reliance by Ralph Waldo Emerson, 1841</small>
+
+				</div>
+				<small><small class="fragment" style="color:red; margin-top:20px"><sup>*</sup>:The same word means two very different things here.</small>
+			</small>
+			</div>
+		</div>
+				</section>
+				<section>
+					<p>
+					And yet on a more meta level<br/>
+					they are pretty much alike.
+				</p>
+					<div style="font-size:0.8em; margin-top:90px">
+					<p class="fragment colorToChange0">
+						Both: Give strucutres to strings ☑
+					</p>
+					<p class="fragment colorToChange0">
+						Both: Can result in actions if pass to an "interpeter" ☑
+					</p>
+					<p class="fragment">
+						Both: Easier to be adapted the younger the human is ☑
+					</p>
+					<p class="fragment">
+						Both: Evolve over time to fit its users' need ☑
+					</p>
+					<p class="fragment" id="trigger-color-change0">
+					</p>
+					<script>
+					(function(){
+						var trigger = document.getElementById("trigger-color-change0")
+						var a = setInterval(function(){
+							if( trigger.className.indexOf("visible") != -1){
+								var ele = document.getElementsByClassName("colorToChange0")
+								_.each(ele,function(e){
+									e.style.color = "#49b7ef"
+								})
+								clearInterval(a)
+							}
+						},200)
+					})()
+					</script>
+				</div>
+				</section>
+				<section>
+					<p>An interpreter is what that gives life to a langugage.</p>
+					<div style="overflow:hidden;">
+						<div class="fragment" style="width:50%; text-align:center; float:left">
+						<img src="images/interpreters.png" style="width:70%; ">
+						<small>What some interpreters for <br /> programming languages look like</small>
+					</div>
+					<div class="fragment" style="width:50%; text-align:center; float:left">
+						<img src="images/humans.jpg" style="width:80%">
+						<small>What some interpreters for <br /> human languages look like</small>
+					</div>
+				</div>
+			</section>
+			<section>
+				<div style="margin-bottom:60px">
+				<pre><code class="lisp">
+(define factorial
+    (lambda (n)
+      (if (= n 0)
+          1
+          (* n (factorial (- n 1))))))
+(factorial 3)
+			</code></pre>
+			<small>We should expect to get the integer 6 from running this Scheme code.</small>
+		</div>
+		<div class="fragment" style="overflow:hidden">
+			<div style="width:50%;float:left">
+			<pre style="line-height:1"><code class="javascript" style="font-size: 0.7em">
+function factorial(n){
+	if(n === 0){
+		return 1
+	}else{
+		return n * factorial(n - 1)
+	}
+}
+factorial(3)
+		</code></pre>
+		<small>(a Javascript translation for those who are not familiar wtih Scheme.)</small>
+	</div>
+	<div style="width:50%; float:left">
+		<pre style="line-height:1"><code class="haskell" style="font-size: 0.7em">
+factorial 0 = 1
+factorial n = n * factorial (n - 1)
+factorial 3
+</code></pre>
+	<small>(a Haskell translation for fun.)</small>
+		</div>
+
+	</section>
+ <section>
+		<p>Step 1: Tokenization</p>
+		<p><small>Based on some rules, separate characters into groups.</small>
+		</p>
+		<div>
+			<img src="images/tokenization.png" style="width:660px">
+		</div>
+		<div style="width:120%;position:relative;left:-10%">
+		<div class="blockage">(</div>
+		<div class="blockage">define</div>
+		<div class="blockage">factorial</div>
+		<div class="blockage">(</div>
+		<div class="blockage">lambda</div>
+		<div class="blockage">(</div>
+		<div class="blockage">n</div>
+		<div class="blockage">)</div>
+		<div class="blockage">(</div>
+		<div class="blockage">n</div>
+		<div class="blockage">0</div>
+		<div class="blockage">)</div>
+		<div class="blockage">0</div>
+		<div class="blockage">(</div>
+		<div class="blockage">*</div>
+    <div class="blockage">(</div>
+		<div class="blockage">*</div>
+		<div class="blockage">n</div>
+		<div class="blockage">(</div>
+		<div class="blockage">factorial</div>
+		<div class="blockage">(</div>
+		<div class="blockage">-</div>
+		<div class="blockage">n</div>
+		<div class="blockage">1</div>
+		<div class="blockage">)</div>
+		<div class="blockage">)</div>
+		<div class="blockage">)</div>
+		<div class="blockage">)</div>
+		<div class="blockage">)</div>
+		<div class="blockage">)</div>
+		<div class="blockage">(</div>
+		<div class="blockage">factorial</div>
+		<div class="blockage">3</div>
+		<div class="blockage">)</div>
+	</div>
+	<small>So you end up with a list of tokens.</small>
+	</section>
+	<section>
+		<p>Step 2: Parsing (giving it structure)</p>
+		<p><small>Based on some rules, pair small groups together into medium groups, medium groups together into big groups ... until everything is in one gaint group.</small>
+		</p>
+		<div style=" display: flex;
+  align-items: center;
+  justify-content: center;">
+		<img src="images/ast.png" style="width:400px"> <img src="images/lisp.jpg" style="width:550px; margin-left:50px">
+	</div>
+	<small>So you end up with a tree.</small>
+	</section>
+	<section>
+		<p>Step 3: Tree traversal (action time!)</p>
+		<p><small>Based on some rules, go from the top of the tree and reduce everything to irreducible.</small>
+		</p>
+		<div class="slideshow">
+			<img src="images/1.png">
+			<img class="fragment" src="images/2.png">
+			<img class="fragment" src="images/3.png">
+			<img class="fragment" src="images/4.png">
+			<img class="fragment" src="images/5.png">
+			<img class="fragment" src="images/6.png">
+			<img class="fragment" src="images/7.png">
+			<img class="fragment" src="images/8.png">
+			<img class="fragment" src="images/9.png">
+			<img class="fragment" src="images/10.png">
+			<img class="fragment" src="images/11.png">
+			<img class="fragment" src="images/12.png">
+			<img class="fragment" src="images/13.png">
+			<img class="fragment" src="images/14.png">
+			<img class="fragment" src="images/15.png">
+			<img class="fragment" src="images/16.png">
+			<img class="fragment" src="images/17.png">
+			<img class="fragment" src="images/18.png">
+	</div>
+
+	</section>
+	<section>
+			<p>That's it. That's basically how a Sceheme interpeter would go about interpreting the following text.</p>
+			<div><pre><code class="lisp">
+(define factorial
+	(lambda (n)
+		(if (= n 0)
+		    1
+		    (* n (factorial (- n 1))))))
+(factorial 3)
+</code></pre></div>
+	</section>
+	<section>
+		<div style="overflow:hidden;">
+			<div class="fragment" style="width:50%; text-align:center; float:left">
+			<img src="images/the-treachery-of-images.jpg" style="width:70%; ">
+			<small>This is not a pipe.</small>
+		</div>
+		<div class="fragment" style="width:50%; text-align:center; float:left">
+			<pre><code class="lisp" style="font-size:0.65em">
+(define factorial
+	(lambda (n)
+		(if (= n 0)
+		1
+		(* n (factorial (- n 1))))))
+(factorial 3)
+		</code></pre>
+			<small>This is not a program.</small>
+		</div>
+	</div>
+	</section>
+	<section>
+		<div class="fragment"> From a more Eastern philosophical point of view:</div>
+		<div class="fragment" style="font-size:0.9em; font-family:'Times'">
+			<img id="laozi" src="images/laozi.jpg" style="width:300px;">
+			<div> "The Tao that can be told is not the Eternal Tao.</div>
+			<div> The program that can be written is not the Eternal program."</div>
+		</div>
+		<p class="fragment" id="give-laozi-book">
+		</p>
+		<script>
+		(function(){
+			var trigger = document.getElementById("give-laozi-book")
+			var a = setInterval(function(){
+				if( trigger.className.indexOf("visible") != -1){
+						document.getElementById("laozi").src="images/laoziWithTOP.jpg"
+				}
+			},200)
+		})()
+		</script>
+	</section>
+	<section>
+			<div style="font-size:0.8em;margin-bottom:20px">
+				Conceptually Tokenization-Parsing-TreeTraversal describes the basics of how a (high-level language) interpreter does its interpreting.
+			</div>
+			<div class="fragment" style="margin-bottom:50px">
+			<small>
+				Low-level ones (often referred to as microprocessors) are even <br /> more straightforward on that.<br/><br />
+				The hard part lies in designing and realising them in the physical realm.
+			</small>
+			<img src="images/beautiful.jpg" style="width:360px"/>
+		</div>
+	</section>
+	<section>
+		<div style="font-size:0.9em;">
+			And in the real world we would always need to take performance into consideration.
+		</div>
+		<div style="font-size:0.8em; margin-top:30px">
+			That's why it is a common practise to compile the code before feeding them to a low-level interpreter.
+		</div>
+			<div style="font-size:0.5em;  margin-top:20px">
+			Optimisation can be implemented much easier during the process of comiling than interpreting. ☑<br/>
+			Compilation also reduces the size of the code significantly and helps with portability! ☑
+		</div>
+		<img src="images/compiling.png" style="width:320px" />
+	</section>
+	<section>
+		For example. The architecture of Google's V8 has evolved quite a lot since 2018:
+		<div style="position:relative; display: flex;
+  align-items: center;
+  justify-content: center;">
+<div class="fragment" style="position:absolute; top:0; width:700px"> <img src="images/v8_2008.png" /></div>
+<div class="fragment" style="position:absolute; top:0; width:700px"> <img src="images/v8_2010.png" /></div>
+		<div class="fragment" style="position:absolute; top:0; width:700px"> <img src="images/v8_2015.png" /></div>
+		<div class="fragment" style="position:absolute; top:0; width:700px" ><img src="images/v8_2017.png" /></div>
+		<div class="fragment" style="position:absolute; top:0; width:700px" ><img src="images/v8_now.png" /></div>
+	</div>
+	</section>
+	<section>
+		Source available on Github: https://github.com/v8/v8
+		<small>(I'm still in the midst of deconstructing it)</small> <br />
+		<p>V8 is written in C++.</p>
+		<div class="fragment">
+		<img src="images/oldsport.jpg" style="width:590px" />
+	</div>
+	</section>
+	<section>
+		<p style="font-size:0.75em">
+		The simplist and most elegant interpreter for a language is one written in the language itself and implements every feature using the existing features homomorphically.<br />
+	</p>
+	<p style="font-size:0.9em">
+		These interpreters are known as meta-circular interpeters. <br />
+	</p>
+		<img class="fragment" src="images/toy.jpg" style="width:510px" />
+	</section>
+	<section>
+		Here I'd show you very breifly <br />a meta-circular interpeter I wrote for Scheme.
+	</section>
+	<section>
+		<h1>Thank you!</h1>
+		<p style="font-size:0.8em">Feel free to follow me on twitter @ArchyWilhes  <i class="ion-social-twitter"></i></p>
+		<p style="font-size:0.8em">Or drop me a message at a@0a.io <i class="ion-email-unread"></i> </p>
+		<p style="font-size:0.8em">Or join in Alpha Testing for MeetArchy <i class="ion-erlenmeyer-flask"></i></p>
+		<p style="margin-top:-20px"><small>an app where you can schedule a meet-up with me. Coming soon on <span style="font-size: 1.3em; margin-left:4px">
+          <i class="ion-social-apple"></i>  <i class="ion-social-android"></i>
+        </span></small>
+		</p>
+		<br/>
+		<p>It's Q & A time!</p>
+	</section>
+		</div>
+	</div>
+
+			<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+		<script>
+		var downed = false
+		Reveal.addEventListener( 'not_advances', function() {
+			downed = false
+			window.addEventListener('keydown', function (e) {
+				// go to the right
+				if (e.keyCode == 39) {
+					downed = true
+					// document.getElementsById("ta").style.
+				}
+			})
+			} );
+</script>
+	</body>
+</html>
