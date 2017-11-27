@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<script src="http://underscorejs.org/underscore-min.js"></script>
+		<script src="js/underscore-min.js"></script>
 
 		<title>Slide</title>
 
@@ -25,7 +25,6 @@
 			font-weight: 900
 		}
 		.slideshow{
-
 			height:900px !important; width:340px !important;
 			position:relative !important;
 			margin:0 auto !important;
@@ -65,10 +64,10 @@
 			</p>
 				</section>
 				<section>
-					What is a programming?
+					What is programming?
 					<br /> <br />
 					<p class="fragment" style="font-size:0.8em">
-						Why do some people find programing langauges intimidating?
+						Why do some people find programming langauges intimidating?
 					<img src="images/programming_languages_and_me.jpg" width="480px">
 					</p>
 				</section>
@@ -115,7 +114,7 @@
 						Both: Give strucutres to strings ☑
 					</p>
 					<p class="fragment colorToChange0">
-						Both: Can result in actions if pass to an "interpeter" ☑
+						Both: Can result in actions if pass to an "interpreter" ☑
 					</p>
 					<p class="fragment">
 						Both: Easier to be adapted the younger the human is ☑
@@ -207,12 +206,13 @@ factorial 3
 		<div class="blockage">n</div>
 		<div class="blockage">)</div>
 		<div class="blockage">(</div>
+		<div class="blockage">if</div>
+		<div class="blockage">(</div>
+		<div class="blockage">=</div>
 		<div class="blockage">n</div>
 		<div class="blockage">0</div>
 		<div class="blockage">)</div>
-		<div class="blockage">0</div>
-		<div class="blockage">(</div>
-		<div class="blockage">*</div>
+		<div class="blockage">1</div>
     <div class="blockage">(</div>
 		<div class="blockage">*</div>
 		<div class="blockage">n</div>
@@ -236,9 +236,47 @@ factorial 3
 	<small>So you end up with a list of tokens.</small>
 	</section>
 	<section>
+		<section>
 		<p>Step 2: Parsing (giving it structure)</p>
-		<p><small>Based on some rules, pair small groups together into medium groups, medium groups together into big groups ... until everything is in one gaint group.</small>
+		<p><small>Based on some rules, pair tokens together into small groups, small groups together into medium groups ... until everything is in one gaint group.</small>
 		</p>
+		<div style="width:120%;position:relative;left:-10%">
+		<div class="blockage">(</div>
+		<div class="blockage">define</div>
+		<div class="blockage">factorial</div>
+		<div class="blockage">(</div>
+		<div class="blockage">lambda</div>
+		<div class="blockage">(</div>
+		<div class="blockage">n</div>
+		<div class="blockage">)</div>
+		<div class="blockage">(</div>
+		<div class="blockage">if</div>
+		<div class="blockage">(</div>
+		<div class="blockage">=</div>
+		<div class="blockage">n</div>
+		<div class="blockage">0</div>
+		<div class="blockage">)</div>
+		<div class="blockage">1</div>
+    <div class="blockage">(</div>
+		<div class="blockage">*</div>
+		<div class="blockage">n</div>
+		<div class="blockage">(</div>
+		<div class="blockage">factorial</div>
+		<div class="blockage">(</div>
+		<div class="blockage">-</div>
+		<div class="blockage">n</div>
+		<div class="blockage">1</div>
+		<div class="blockage">)</div>
+		<div class="blockage">)</div>
+		<div class="blockage">)</div>
+		<div class="blockage">)</div>
+		<div class="blockage">)</div>
+		<div class="blockage">)</div>
+		<div class="blockage">(</div>
+		<div class="blockage">factorial</div>
+		<div class="blockage">3</div>
+		<div class="blockage">)</div>
+	</div>
 		<div style=" display: flex;
   align-items: center;
   justify-content: center;">
@@ -247,11 +285,31 @@ factorial 3
 	<small>So you end up with a tree.</small>
 	</section>
 	<section>
+		These rules can be quite nicely expressed in a notation known as BNF.<br />
+			<small>Here is an example showing a BNF representation of natural numbers:</small><br />
+			<pre style="line-height:1"><code>
+n ::= 0 | 1 + n
+		</code></pre>
+		 </p>
+		 <p class="fragment">
+			 <small>Here is some BNF representations of sound expressions in Scheme:</small><br />
+			 <pre style="line-height:1"><code class="html">
+&lt;function &gt; ::= (lambda ({ &lt;args &gt;}*)  &lt;body &gt;)
+&lt;application &gt; ::= ( &lt;non-keyword-symbol &gt;{ &lt;variable &gt;}*)
+&lt;functionDefintion &gt; ::= ( &lt;non-keyword-symbol &gt; &lt;function &gt;)
+&lt;nonFunctionDefintion &gt; ::= ( &lt;non-keyword-symbol &gt; &lt;primitve &gt;)
+				</code></pre>
+			</p>
+
+	</section>
+</section>
+	<section>
 		<p>Step 3: Tree traversal (action time!)</p>
 		<p><small>Based on some rules, go from the top of the tree and reduce everything to irreducible.</small>
 		</p>
 		<div class="slideshow">
-			<img src="images/1.png">
+			<img src="images/ast.png">
+			<img class="fragment" src="images/1.png">
 			<img class="fragment" src="images/2.png">
 			<img class="fragment" src="images/3.png">
 			<img class="fragment" src="images/4.png">
@@ -273,7 +331,7 @@ factorial 3
 
 	</section>
 	<section>
-			<p>That's it. That's basically how a Sceheme interpeter would go about interpreting the following text.</p>
+			<p>That's it. That's basically how a Sceheme interpreter would go about interpreting the following text.</p>
 			<div><pre><code class="lisp">
 (define factorial
 	(lambda (n)
@@ -372,24 +430,24 @@ factorial 3
 		The simplist and most elegant interpreter for a language is one written in the language itself and implements every feature using the existing features homomorphically.<br />
 	</p>
 	<p style="font-size:0.9em">
-		These interpreters are known as meta-circular interpeters. <br />
+		These interpreters are known as meta-circular interpreters. <br />
 	</p>
 		<img class="fragment" src="images/toy.jpg" style="width:510px" />
 	</section>
 	<section>
-		Here I'd show you very breifly <br />a meta-circular interpeter I wrote for Scheme.
+		Here I'd show you very breifly <br />a meta-circular interpreter I wrote for Scheme.
 	</section>
 	<section>
 		<h1>Thank you!</h1>
 		<p style="font-size:0.8em">Feel free to follow me on twitter @ArchyWilhes  <i class="ion-social-twitter"></i></p>
 		<p style="font-size:0.8em">Or drop me a message at a@0a.io <i class="ion-email-unread"></i> </p>
-		<p style="font-size:0.8em">Or join in Alpha Testing for MeetArchy <i class="ion-erlenmeyer-flask"></i></p>
-		<p style="margin-top:-20px"><small>an app where you can schedule a meet-up with me. Coming soon on <span style="font-size: 1.3em; margin-left:4px">
-          <i class="ion-social-apple"></i>  <i class="ion-social-android"></i>
-        </span></small>
+		<p style="font-size:0.8em">Or join in Alpha Testing for a cryptocurrency I'm working on
+			<i class="ion-erlenmeyer-flask"></i> <i class="ion-cash"></i>
 		</p>
+		<p><small>(built in with a functional Turing-complete programming language like ethereum)</small></p>
+
 		<br/>
-		<p>It's Q & A time!</p>
+		<p class="fragment">It's Q & A time!</p>
 	</section>
 		</div>
 	</div>
